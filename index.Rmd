@@ -35,7 +35,7 @@ You should test out updating your GitHub Pages website:
 * clone your group's blog project repo in RStudio
 * update "Your Project Title Here" to a new title in the YAML header
 * knit `index.Rmd` (we will now knit to HTML by default instead of pdf)
-* commit and push BOTH the `index.Rmd` and the `index.html` files as you are
+* commit and push **both** `index.Rmd` and `index.html`
 * go to https://stat231-f21.github.io/blog_los-hermanos-intermareales/ to see the published test document (this is publicly available!)
 
 ## Including code and plots
