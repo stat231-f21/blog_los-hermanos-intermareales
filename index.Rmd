@@ -1,0 +1,137 @@
+---
+title: "Your Project Title Here"
+author: "Your Names Here"
+date: "Add a date"
+output:
+  rmdformats::readthedown:
+    thumbnails: false
+    highlight: "kate"
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+library(kableExtra) # for example code; delete if not needed
+
+# Set code chunk defaults 
+knitr::opts_chunk$set(echo = FALSE, 
+                      mesage = FALSE,
+                      warning = FALSE,
+                      fig.align = "center")
+
+# Set R environment options
+options(knitr.kable.NA = '')
+```
+
+# Header 1 (Section heading)
+
+## Header 2 (Subsection heading)
+
+### Header 3 (Subsubsection heading)
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For example, you can include **Bold** and _Italic_ and `Code` text.  For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+You should test out updating your GitHub Pages website:
+
+* clone your group's blog project repo in RStudio
+* update "Your Project Title Here" to a new title in the YAML header
+* knit `index.Rmd` (we will now knit to HTML by default instead of pdf)
+* commit and push BOTH the `index.Rmd` and the `index.html` files as you are
+* go to https://stat231-f21.github.io/blog_los-hermanos-intermareales/ to see the published test document (this is publicly available!)
+
+## Including code and plots
+
+You can embed code as normal, for example:
+
+```{r cars}
+summary(cars)
+```
+
+Let's clean up the format of that output instead of using the standard R output:
+
+```{r pretty-table, echo = TRUE}
+summary(cars) %>%
+  kable(col.names = c("Speed", "Distance"),
+        row.names = FALSE) %>%
+  kable_styling(bootstrap_options = "striped",
+                full_width = FALSE) %>%
+  row_spec(0, bold = TRUE) %>%
+  column_spec(1:2, width = "1.5in") 
+```
+
+In a study from the 1920s, fifty cars were used to see how the speed of the car and the distance taken to stop were related.  Speeds ranged between `r min(cars$speed)` and `r max(cars$speed)` mph.  Distances taken to stop ranged between `r min(cars$dist)` and `r max(cars$dist)` feet, with the middle 50% falling between `r as.numeric(quantile(cars$dist)[2])` and `r as.numeric(quantile(cars$dist)[4])` feet.  
+
+You can also embed plots as normal, for example:
+
+```{r figure1}
+ggplot(data = cars, aes(x = speed, y = dist)) + 
+  geom_point() + 
+  labs(x = "Speed of car (mph)",
+       y = "Distance taken to stop (ft)",
+       title = "Stopping distance increases with faster speeds",
+       subtitle = "Based on 1920s study") +
+  theme_classic()
+```
+
+Take note of the default code chunk options in the `setup` code chunk, and adjust individual code chunk options as needed. for example, unlike the rest of the Rmd files we worked in this semester, the default code chunk option is `echo = FALSE`, so you will need to set `echo  = TRUE` for any code chunks you would like to display in the blog. 
+
+
+## Including links and images/videos
+
+You can include [links](https://www.datadreaming.org/post/r-markdown-theme-gallery/) and there are a few ways to embed  images! Both options for embedding images below can be used interchangeably. They both work for png, pdf, jpg, and even gif formats, and both support filepaths that are either URLs (for videos, you can include links to any valid YouTube or Vimeo URLs; see [here](https://bookdown.org/yihui/rmarkdown/learnr-videos.html) for more details) or point to a location within your project directory. 
+
+### Option 1: Markdown approach
+
+![This is a figure caption. The artwork is called Safe Space by  [Kenesha Sneed](https://www.keneshasneed.com/#/safespace/)](img/Kenesha-Sneed_safe-space.jpeg)
+
+
+### Option 2: Code chunk approach
+
+```{r, fig.cap = "This is also figure caption"}
+knitr::include_graphics("https://media.giphy.com/media/H7ZrrA9V2pd3Tehdds/giphy.gif")
+```
+
+## Including equations
+
+Equations may be needed if you are explaining a new technique or perhaps providing some other relevant formulas in your exposition. There are two ways to include equations:
+
+* Inline: $b \sim N(0, \sigma^2_b)$
+* Display-style (displayed on its own line): $$\frac{\sigma^2_b}{\sigma^2_b + \sigma^2_e}$$
+
+For typesetting equations appropriately, take a look at the *Symbols in math mode* section of this  [cheat sheet](https://users.dickinson.edu/~richesod/latex/latexcheatsheet.pdf)  (or do some extra Googling---there are *many* resources).
+
+
+# You can even create tabs within your webpage if you want! {.tabset .tabset-fade .tabset-pills}
+
+Every subsection heading (starting with `##`) until you create a new section heading (starting with `#`) will be a new tab.
+
+## Bulleted list
+
+You can make a bulleted list like this:
+
+* item 1
+* item 2
+* item 3
+
+
+## Numbered list
+
+You can make a numbered list like this
+
+1. First thing I want to say
+2. Second thing I want to say
+3. Third thing I want to say
+
+# Customizing your blog design
+
+As a *final* detail **only** if you have time, you can explore options for customizing the style of your blog. By default, we are using the `readthedown` theme from the [**rmdformats** package](https://github.com/juba/rmdformats) (see Line 6 of this file if you want to switch out themes). There are, I'm sure, many many many more similar packages with built in themes, or you can look into how to include a CSS code chunk to customize aspects of the current theme.  
+
+There are some easy-to-change options that you can play around with:
+
+* The theme itself (Line 6): `rmdformats::readthedown`, `rmdformats::downcute`, `rmdformats::robobook`, `rmdformats::material`,
+  * For `downcute` only, you can add a new indented line below Line 6 with the code `downcute_theme: "chaos"` for the `downcute chaos` theme
+  * I would *not* recommend the other themes that do not have the sidebar navigation
+  
+* Syntax highlighting options (Line 8, `highlight`): `"default"`, `"tango"`, `"pygments"`, `"kate"`, `"monochrome"`, `"espresso"`, `"zenburn"`, `"haddock"`, or `"textmate"` (or `NULL` for no syntax highlighting)
+
+
+You can explore additional customizable YAML options by looking at the [**rmdformats** package](https://github.com/juba/rmdformats) page or running, for example, `?rmdformats::readthedown()` to see the help documentation for a particular theme from the package.
