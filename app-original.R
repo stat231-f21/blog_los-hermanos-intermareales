@@ -45,8 +45,19 @@ treatment_choice_names <- c("Control", "10 Minutes", "20 Minutes")
 names(treatment_choice_values) <- treatment_choice_names
 
 #vectors for sediments
-sediment_choice_values <- c("po4SedMean", "po4WaterIntMean", "po4WaterSurfMean")
-sediment_choice_names <- c("Mean Sediment PO4", "Mean Interstitial Water PO4", "Mean Surf Water PO4")
+sediment_choice_values <- c("po4SedMean", "po4WaterIntMean", "po4WaterSurfMean",
+                            "no2no3SedMean", "no2no3WaterIntMean", 
+                            "no2no3WaterSurfMean", "nh4SedMean", "nh4WaterIntMean",
+                            "nh4WaterSurfMean", "totalSedMean", "totalWaterIntMean",
+                            "totalWaterSurfMean")
+sediment_choice_names <- c("Mean Sediment PO4", "Mean Interstitial Water PO4", 
+                           "Mean Surf Water PO4", "Mean Sediment NO2+NO3",
+                           "Mean Interstitial Water NO2+NO3",
+                           "Mean Surf Water NO2+NO3", "Mean Sediment NH4",
+                           "Mean Interstitial Water NH4", "Mean Surf Water NH4",
+                           "Mean Sediment Total Nutrient Content",
+                           "Mean Interstitial Water Total Nutrient Content",
+                           "Mean Surf Water Total Nutrient Content")
 names(sediment_choice_values) <- sediment_choice_names
 
 #choices for diversity indices
@@ -145,7 +156,12 @@ server <- function(input, output){
                      binwidth = case_when(
                        input$histSed == "po4SedMean" ~ 0.25,
                        input$histSed == "po4WaterIntMean" ~ 75,
-                       input$histSed == "po4WaterSurfMean" ~ 30
+                       input$histSed == "po4WaterSurfMean" ~ 30,
+                       input$histSed == "no2no3SedMean" ~ 0.25,
+                       input$histSed == "no2no3WaterSurfMean" ~ 10,
+                       input$histSed == "nh4SedMean" ~ 5,
+                       input$histSed == "totalSedMean" ~ 7.5,
+                       TRUE ~ 25
                      )) +
       labs(title = 'Distribution of Nutrient Content on Beaches',
            y = "Number of Beaches",
