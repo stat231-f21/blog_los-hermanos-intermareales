@@ -229,6 +229,21 @@ write_csv(diversityData, 'diversityData.csv')
 library(googleway)
 coords <- read.csv('Data/siteCoords.csv')
 
+#cleaning up coords, preparing for left join
+coords <- coords %>%
+  janitor::clean_names() %>%
+  mutate(site = case_when(
+    i_site == "America" ~ "America_1",
+    i_site == "America 2" ~ "America_2",
+    i_site == "de Nerga" ~ "Nerga",
+    i_site == "A Lanzada" ~ "Lanzada",
+    TRUE ~ i_site
+  ))
 
-coordsVector <- c(coords$lat[1], coords$long[1])
+# left join with allCleanData
+allCleanData <- allCleanData %>%
+  left_join(coords, by = c("site" = "site")) %>%
+  select(-i_site)
+
+coordsVector <- c(allCleanData$lat[1], allCleanData$long[1])
 google_map_panorama(coordsVector)
