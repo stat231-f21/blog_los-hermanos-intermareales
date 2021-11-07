@@ -1,11 +1,12 @@
 #setup
 library(tidyverse)
 library(vegan)
+library(usedist)
 
 #set working directory -- change path variable to data folder filepath
 pathLuis <- "C:/Users/Luis/Desktop/Work/stat231/enviro-peer-project-stat231/Data/"
 pathDavid <- "C:/Users/dmeta/OneDrive/Desktop/STAT231/blog_los-hermanos-intermareales/Data/"
-setwd(pathDavid)
+setwd(pathLuis)
 
 #read in dataframes
 #fauna2020 <- readxl::read_xlsx("Fauna_Bait_Experiment_2020_LUIS_Ind_m2.xlsx")
@@ -184,7 +185,10 @@ ggplot(data = allCleanData, aes(x = algaePercentCover, y = controlDiversity)) +
 
 
 #jaccard similarity index comparison/groupings
-jaccard <- vegdist(controlSummary[,-1], method = "jaccard")
+jaccard <- vegdist(controlSummary[-1], method = "jaccard")
+
+names <- controlSummary[[1]]
+jaccard <- dist_setNames(jaccard, names)
 
 plot(
   hclust(jaccard),
