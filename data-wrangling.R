@@ -155,10 +155,19 @@ allCleanData <- data.frame("site" = algaeClean$site,
 #bring in algae data
 allCleanData$algaePercentCover <- algaeClean$cover_percent
 
-#bring in sediment nutrient data and water nutrient data (only doing po4)
+#bring in sediment nutrient data and water nutrient data (doing all nutrients)
 allCleanData$po4SedMean <- nutrientsSedAverages$po4_mean
 allCleanData$po4WaterIntMean <- nutrientsWaterAverages$int_po4_mean
 allCleanData$po4WaterSurfMean <- nutrientsWaterAverages$surf_po4_mean
+allCleanData$no2no3SedMean <- nutrientsSedAverages$no2_no3_mean
+allCleanData$no2no3WaterIntMean <- nutrientsWaterAverages$int_no2no3_mean
+allCleanData$no2no3WaterSurfMean <- nutrientsWaterAverages$surf_no2no3_mean
+allCleanData$nh4SedMean <- nutrientsSedAverages$nh4_mean
+allCleanData$nh4WaterIntMean <- nutrientsWaterAverages$int_nh4_mean
+allCleanData$nh4WaterSurfMean <- nutrientsWaterAverages$surf_nh4_mean
+allCleanData$totalSedMean <- nutrientsSedAverages$n_total_mean
+allCleanData$totalWaterIntMean <- nutrientsWaterAverages$int_total_mean
+allCleanData$totalWaterSurfMean <- nutrientsWaterAverages$surf_total_mean
 
 #write
 write_csv(allCleanData, 'beachData.csv')
