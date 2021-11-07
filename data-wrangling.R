@@ -218,3 +218,13 @@ ggplot(data = allCleanData, aes(x = po4SedMean, y = algaePercentCover)) +
   ylim(0, 4)
 
 write_csv(diversityData, 'diversityData.csv')
+
+
+
+#open up photo sphere
+library(googleway)
+coords <- read.csv('Data/siteCoords.csv')
+
+
+coordsVector <- c(coords$lat[1], coords$long[1])
+google_map_panorama(coordsVector)
