@@ -264,3 +264,18 @@ allCleanData <- allCleanData %>%
 
 coordsVector <- c(allCleanData$lat[1], allCleanData$long[1])
 google_map_panorama(coordsVector)
+
+#NMDS
+nmds <- metaMDS(controlSummary[-1])
+  
+
+plot(nmds)
+
+pointData <- data.frame(nmds$points) %>%
+  mutate(site = controlSummary$site)
+
+ggplot() +
+  geom_point(data = pointData, aes(x = MDS1, y = MDS2, col = site))
+
+
+
