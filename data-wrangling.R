@@ -175,6 +175,12 @@ write_csv(allCleanData, 'beachData.csv')
 
 
 
+######################################
+
+######################################
+
+
+
 #sample visualizations
 #diversity vs algae cover
 ggplot(data = allCleanData, aes(x = algaePercentCover, y = controlDiversity)) +
