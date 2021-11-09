@@ -223,7 +223,18 @@ ggplot(data = allCleanData, aes(x = po4SedMean, y = algaePercentCover)) +
 
 write_csv(diversityData, 'diversityData.csv')
 
+#assemble plots of nutrient data
+library(cowplot)
 
+sedpo4 <- ggplot(data = allCleanData, aes(x = po4SedMean, y = controlDiversity)) +
+  geom_point() +
+  geom_smooth(method = 'lm')
+
+sedno2no3 <- ggplot(data = allCleanData, aes(x = no2no3SedMean, y = controlDiversity)) +
+  geom_point() +
+  geom_smooth(method = 'lm')
+
+plot_grid(sedpo4, sedno2no3)
 
 #open up photo sphere
 library(googleway)
