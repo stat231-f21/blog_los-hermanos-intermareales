@@ -26,7 +26,7 @@ Reply to the **Project plan** issue with an update. In this update, you should p
 
 Reply to the **Project plan** issue with a second update, following the same instructions as your first status update.
 
-## Blog post (Final version due Wednesday, December 9)
+## Blog post (Final version due Wednesday, December 8)
 
 A nearly final draft of your blog post is due by the time of your oral presentation. You may decide to make updates to your blog based on the questions and feedback you receive from your peers after your presentation. The final blog post is due by 5pm ET on the last day of the semester.
 

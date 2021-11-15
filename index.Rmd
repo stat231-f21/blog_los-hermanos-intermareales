@@ -1,19 +1,20 @@
 ---
-title: "Your Project Title Here"
-author: "Your Names Here"
-date: "Add a date"
+title: "Beaches in Galicia"
+author: "David Metacarpa, Caroline Tilton, and Luis de Pablo"
+date: "December 8, 2021"
 output:
-  rmdformats::readthedown:
+  rmdformats::material:
     thumbnails: false
     highlight: "kate"
 ---
 
 ```{r setup, include = FALSE}
 library(tidyverse)
+library(rmdformats)
 library(kableExtra) # for example code; delete if not needed
 
-# Set code chunk defaults 
-knitr::opts_chunk$set(echo = FALSE, 
+# Set code chunk defaults
+knitr::opts_chunk$set(echo = FALSE,
                       mesage = FALSE,
                       warning = FALSE,
                       fig.align = "center")
@@ -22,11 +23,25 @@ knitr::opts_chunk$set(echo = FALSE,
 options(knitr.kable.NA = '')
 ```
 
-# Header 1 (Section heading)
+# What Makes the Beaches in Galicia Unique?
 
-## Header 2 (Subsection heading)
+## Playa America, Carnota, Corrubedo, Barra, Nerga, Lanzada, and Samil
 
-### Header 3 (Subsubsection heading)
+### How do nutrients levels, algal cover, fauna diversity, pitch, and sediment levels vary between these beaches?
+
+
+<!-- Add photo -->
+
+```{r, fig.cap = "Photo was taken just outside of Playa de Soesto"}
+knitr::include_graphics("C:/Users/dmeta/OneDrive/Desktop/STAT231/blog_los-hermanos-intermareales/databeachimg.jpg")
+```
+
+> Our blog is intended to inform users about the sediment nutrients, algal cover, fauna diversity, and locations of eight different sites in Galicia, Spain: Playa America, Carnota, Corrubedo, Barra, Nerga, Lanzada, and Samil. Our blog is centered around a shiny app that includes five different visualizations of beach characteristic variance. All of the visualizations have interactive widgets that allow users to compare different sites, treatments, and nutrients levels, as well as allowing users to click on and view the beaches where the data was collected.
+
+> We decided to focus on the individual characteristics of eight different beaches in Spain and how the beaches vary in biodiversity and geography. The data that we wrangled and analysed included species types, nutrients levels, locations, beach pitches, similarity, and experimental biodiversity levels.For each of the eight beaches, six samples of sediment, interstitial water, and surf water were analyzed for nutrient content of PO4, NO2 + NO3, and NH4. We looked at PO4 specifically because of the impact that it has on biodiversity in the area.
+
+> The data centered around biodiversity was taken during an experiment that compared biodiversity levels when bait was left in the sand. In the field, researchers collected sediment cores from about knee-deep in the water off the beach. These cores were taken back to the lab, where researchers identified all the species present and logged the number of representatives for each species. These data were used to estimate the density per square meter of each species, and it was used to identify the organism diversity found after three different treatments. The treatments included placing a piece of “bait” (squid) in the sand for 10 and 20 minutes, and after the duration of the treatment a 1m^2 core sample was taken from the sand.
+
 
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For example, you can include **Bold** and _Italic_ and `Code` text.  For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
@@ -55,16 +70,16 @@ summary(cars) %>%
   kable_styling(bootstrap_options = "striped",
                 full_width = FALSE) %>%
   row_spec(0, bold = TRUE) %>%
-  column_spec(1:2, width = "1.5in") 
+  column_spec(1:2, width = "1.5in")
 ```
 
-In a study from the 1920s, fifty cars were used to see how the speed of the car and the distance taken to stop were related.  Speeds ranged between `r min(cars$speed)` and `r max(cars$speed)` mph.  Distances taken to stop ranged between `r min(cars$dist)` and `r max(cars$dist)` feet, with the middle 50% falling between `r as.numeric(quantile(cars$dist)[2])` and `r as.numeric(quantile(cars$dist)[4])` feet.  
+In a study from the 1920s, fifty cars were used to see how the speed of the car and the distance taken to stop were related.  Speeds ranged between `r min(cars$speed)` and `r max(cars$speed)` mph.  Distances taken to stop ranged between `r min(cars$dist)` and `r max(cars$dist)` feet, with the middle 50% falling between `r as.numeric(quantile(cars$dist)[2])` and `r as.numeric(quantile(cars$dist)[4])` feet. 
 
 You can also embed plots as normal, for example:
 
 ```{r figure1}
-ggplot(data = cars, aes(x = speed, y = dist)) + 
-  geom_point() + 
+ggplot(data = cars, aes(x = speed, y = dist)) +
+  geom_point() +
   labs(x = "Speed of car (mph)",
        y = "Distance taken to stop (ft)",
        title = "Stopping distance increases with faster speeds",
@@ -72,12 +87,12 @@ ggplot(data = cars, aes(x = speed, y = dist)) +
   theme_classic()
 ```
 
-Take note of the default code chunk options in the `setup` code chunk, and adjust individual code chunk options as needed. for example, unlike the rest of the Rmd files we worked in this semester, the default code chunk option is `echo = FALSE`, so you will need to set `echo  = TRUE` for any code chunks you would like to display in the blog. 
+Take note of the default code chunk options in the `setup` code chunk, and adjust individual code chunk options as needed. for example, unlike the rest of the Rmd files we worked in this semester, the default code chunk option is `echo = FALSE`, so you will need to set `echo  = TRUE` for any code chunks you would like to display in the blog.
 
 
 ## Including links and images/videos
 
-You can include [links](https://www.datadreaming.org/post/r-markdown-theme-gallery/) and there are a few ways to embed  images! Both options for embedding images below can be used interchangeably. They both work for png, pdf, jpg, and even gif formats, and both support filepaths that are either URLs (for videos, you can include links to any valid YouTube or Vimeo URLs; see [here](https://bookdown.org/yihui/rmarkdown/learnr-videos.html) for more details) or point to a location within your project directory. 
+You can include [links](https://www.datadreaming.org/post/r-markdown-theme-gallery/) and there are a few ways to embed  images! Both options for embedding images below can be used interchangeably. They both work for png, pdf, jpg, and even gif formats, and both support filepaths that are either URLs (for videos, you can include links to any valid YouTube or Vimeo URLs; see [here](https://bookdown.org/yihui/rmarkdown/learnr-videos.html) for more details) or point to a location within your project directory.
 
 ### Option 1: Markdown approach
 
@@ -100,7 +115,12 @@ Equations may be needed if you are explaining a new technique or perhaps providi
 For typesetting equations appropriately, take a look at the *Symbols in math mode* section of this  [cheat sheet](https://users.dickinson.edu/~richesod/latex/latexcheatsheet.pdf)  (or do some extra Googling---there are *many* resources).
 
 
-# You can even create tabs within your webpage if you want! {.tabset .tabset-fade .tabset-pills}
+<!-- add new tabs -->
+# Beach Views {.tabset .tabset-fade .tabset-pills}
+# Sediment Levels {.tabset .tabset-fade .tabset-pills}
+# Fauna Diversity {.tabset .tabset-fade .tabset-pills}
+# Nutrients Levels {.tabset .tabset-fade .tabset-pills}
+
 
 Every subsection heading (starting with `##`) until you create a new section heading (starting with `#`) will be a new tab.
 
@@ -123,14 +143,14 @@ You can make a numbered list like this
 
 # Customizing your blog design
 
-As a *final* detail **only** if you have time, you can explore options for customizing the style of your blog. By default, we are using the `readthedown` theme from the [**rmdformats** package](https://github.com/juba/rmdformats) (see Line 6 of this file if you want to switch out themes). There are, I'm sure, many many many more similar packages with built in themes, or you can look into how to include a CSS code chunk to customize aspects of the current theme.  
+As a *final* detail **only** if you have time, you can explore options for customizing the style of your blog. By default, we are using the `readthedown` theme from the [**rmdformats** package](https://github.com/juba/rmdformats) (see Line 6 of this file if you want to switch out themes). There are, I'm sure, many many many more similar packages with built in themes, or you can look into how to include a CSS code chunk to customize aspects of the current theme. 
 
 There are some easy-to-change options that you can play around with:
 
 * The theme itself (Line 6): `rmdformats::readthedown`, `rmdformats::downcute`, `rmdformats::robobook`, `rmdformats::material`,
   * For `downcute` only, you can add a new indented line below Line 6 with the code `downcute_theme: "chaos"` for the `downcute chaos` theme
   * I would *not* recommend the other themes that do not have the sidebar navigation
-  
+
 * Syntax highlighting options (Line 8, `highlight`): `"default"`, `"tango"`, `"pygments"`, `"kate"`, `"monochrome"`, `"espresso"`, `"zenburn"`, `"haddock"`, or `"textmate"` (or `NULL` for no syntax highlighting)
 
 
