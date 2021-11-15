@@ -57,7 +57,8 @@ controlSummary <- faunaClean %>%
   filter(treatment == "Control") %>%
   group_by(site) %>%
   select(-c("site", "treatment", "sample_code")) %>%
-  summarize_all(sum)
+  summarize_all(sum) %>%
+  select(-"year")
 
 tenSummary <- faunaClean %>%
   filter(treatment == "Bait 10 min.") %>%
@@ -276,8 +277,17 @@ plot(nmds)
 pointData <- data.frame(nmds$points) %>%
   mutate(site = controlSummary$site)
 
+speciesNames <- colnames(controlSummary)
+speciesNames <- speciesNames[-1]
+speciesData <- data.frame(nmds$species)
+
+#plot sites
 ggplot() +
   geom_point(data = pointData, size = 8, aes(x = MDS1, y = MDS2, col = site))
+
+#plot species
+ggplot() +
+  geom_point(data = speciesData, size = 3, alpha = 0.5, aes(x = MDS1, y = MDS2, col = rownames(speciesData)))
 
 
 #interactive map
