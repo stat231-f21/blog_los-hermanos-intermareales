@@ -190,6 +190,8 @@ ggplot(data = allCleanData, aes(x = algaePercentCover, y = controlDiversity)) +
   labs(title = "Diversity vs Algal Cover", x = "Algae Cover (%)", y = "Shannon Diversity Index (Control)", color = "Site")
 
 
+write.csv(controlSummary, "controlSummary.csv")
+
 #jaccard similarity index comparison/groupings
 jaccard <- vegdist(controlSummary[-1], method = "jaccard")
 
