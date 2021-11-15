@@ -4,7 +4,7 @@ library(vegan)
 library(usedist)
 
 #set working directory -- change path variable to data folder filepath
-pathLuis <- "C:/Users/Luis/Desktop/Work/stat231/enviro-peer-project-stat231/Data/"
+pathLuis <- "C:/Users/Luis/Desktop/Work/stat231/blog_los-hermanos-intermareales/Data/"
 pathDavid <- "C:/Users/dmeta/OneDrive/Desktop/STAT231/blog_los-hermanos-intermareales/Data/"
 setwd(pathLuis)
 
@@ -244,7 +244,7 @@ plot_grid(sedpo4, sedno2no3)
 
 #open up photo sphere
 library(googleway)
-coords <- read.csv('Data/siteCoords.csv')
+coords <- read.csv('siteCoords.csv')
 
 #cleaning up coords, preparing for left join
 coords <- coords %>%
@@ -275,7 +275,14 @@ pointData <- data.frame(nmds$points) %>%
   mutate(site = controlSummary$site)
 
 ggplot() +
-  geom_point(data = pointData, aes(x = MDS1, y = MDS2, col = site))
+  geom_point(data = pointData, size = 8, aes(x = MDS1, y = MDS2, col = site))
 
+
+#interactive map
+library(leaflet)
+
+leaflet(data = allCleanData) %>%
+  addTiles() %>%
+  addMarkers()
 
 
