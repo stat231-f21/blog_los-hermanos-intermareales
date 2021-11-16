@@ -194,15 +194,15 @@ ggplot(data = allCleanData, aes(x = algaePercentCover, y = controlDiversity)) +
 write.csv(controlSummary, "controlSummary.csv")
 
 #jaccard similarity index comparison/groupings
-jaccard <- vegdist(controlSummary[-1], method = "jaccard")
+bray <- vegdist(controlSummary[-1], method = "bray")
 
 names <- controlSummary[[1]]
-jaccard <- dist_setNames(jaccard, names)
+bray <- dist_setNames(bray, names)
 
 plot(
-  hclust(jaccard),
+  hclust(1-bray),
   hang = -1,
-  main = "Sites clustered by Jaccard similarity",
+  main = "Sites clustered by 1-Bray-Curtis dissimilarity",
   axes = FALSE, ylab = "")
 
 #comparison of treatments
@@ -269,7 +269,7 @@ coordsVector <- c(allCleanData$lat[1], allCleanData$long[1])
 google_map_panorama(coordsVector)
 
 #NMDS
-nmds <- metaMDS(controlSummary[-1])
+nmds <- metaMDS(controlSummary[-1], distance = "bray")
   
 
 plot(nmds)
@@ -277,17 +277,26 @@ plot(nmds)
 pointData <- data.frame(nmds$points) %>%
   mutate(site = controlSummary$site)
 
-speciesNames <- colnames(controlSummary)
-speciesNames <- speciesNames[-1]
 speciesData <- data.frame(nmds$species)
 
 #plot sites
 ggplot() +
-  geom_point(data = pointData, size = 8, aes(x = MDS1, y = MDS2, col = site))
+  geom_point(data = pointData, size = 8, alpha = 0.5, aes(x = MDS1, y = MDS2, col = site))
+
+#clean up species names for legend
+rownames(speciesData) <- rownames(speciesData) %>%
+  str_to_title() %>% 
+  str_replace("_", " ")
+
 
 #plot species
 ggplot() +
   geom_point(data = speciesData, size = 3, alpha = 0.5, aes(x = MDS1, y = MDS2, col = rownames(speciesData)))
+
+#plot species and sites together
+ggplot() +
+  geom_point(data = speciesData, size = 3, alpha = 0.5, aes(x = MDS1, y = MDS2, col = rownames(speciesData))) +
+  geom_point(data = pointData, shape = 2, size = 5, alpha = 0.5, col = "black", aes(x = MDS1, y = MDS2))
 
 
 #interactive map
