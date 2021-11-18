@@ -18,7 +18,7 @@ library(usedist)
 
 # Set code chunk defaults
 knitr::opts_chunk$set(echo = FALSE,
-                     mesage = FALSE,
+                     message = FALSE,
                      warning = FALSE,
                      fig.align = "center")
 
@@ -28,6 +28,9 @@ beaches <- read_csv("beachData.csv")
 controlSummary<- read.csv("controlSummary.csv")
 controlSummary <- controlSummary%>%
   select(-  X)
+
+##correction for america 1 variable
+controlSummary$site[1] <- "America 1"
 
 ```
 
@@ -50,6 +53,9 @@ We decided to focus on the individual characteristics of eight different beaches
 
 The data centered around biodiversity was taken during an experiment that compared biodiversity levels when bait was left in the sand. In the field, researchers collected sediment cores from about knee-deep in the water off the beach. These cores were taken back to the lab, where researchers identified all the species present and logged the number of representatives for each species. These data were used to estimate the density per square meter of each species, and it was used to identify the organism diversity found after three different treatments. The treatments included placing a piece of “bait” (squid) in the sand for 10 and 20 minutes, and after the duration of the treatment a 1m^2 core sample was taken from the sand.
 
+```{r, fig.cap = "Playa Lanzada"}
+knitr::include_graphics("/Users/carrie/Desktop/Stat 231/blog_los-hermanos-intermareales-main/Screen Shot 2021-11-16 at 12.44.49 PM.png")
+```
 
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For example, you can include **Bold** and _Italic_ and `Code` text.  For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
@@ -128,7 +134,7 @@ For typesetting equations appropriately, take a look at the *Symbols in math mod
 
 ```{r, fig.cap = "This is also figure caption", echo = TRUE}
 #interactive map
-library(leaflet)
+#library(leaflet)
 
 #leaflet(data = beaches) %>%
  # addTiles() %>%
@@ -136,10 +142,10 @@ library(leaflet)
 
 ```
 # Similarity maps {.tabset .tabset-fade .tabset-pills}
-```{r, fig.cap = "This is also figure caption", echo = TRUE}
+```{r, fig.cap = "Jaccard Similarities Map of Beaches in Galicia", echo = TRUE}
 
 #FIGURE OUT HOW TO GET AMERICA 1 NAME BACK ON THIS GRAPH
-
+#TRY TO FIND OUT HOW WE CAN FUGURE OUT WHAT SIMILARITY INDEX IS BEST/USED FOR THE MDS PLOT
 #jaccard similarity index comparison/groupings
 jaccard <- vegdist(controlSummary[-1], method = "jaccard")
 
@@ -150,11 +156,11 @@ plot(
   hclust(jaccard),
   hang = -1,
   main = "Sites clustered by Jaccard similarity",
-  axes = FALSE, ylab = "")
+  axes = FALSE, ylab = "", xlab = "")
 ```
 
 # Fauna Diversity {.tabset .tabset-fade .tabset-pills}
-```{r, fig.cap = "This is also figure caption"}
+```{r, fig.cap = "Average Diversity between Treatments", echo = TRUE}
   #comparison of treatments
 diversityData <- beaches %>%
   select(c("site", "controlDiversity", "tenMinDiversity", "twentyMinDiversity")) %>%
@@ -169,8 +175,13 @@ ggplot(data = diversityData, aes(x = treatment, y = diversity)) +
   geom_boxplot()
 ```
 We can add text here to describe the plots of diversity based on treatment
-```{r, fig.cap = "This is also figure caption"}
+The link to the app is included here
+```{r, fig.cap = "Shiny App for Interactive facets of Diversity between Treatments"}
+#knitr::include_app("https://your-account.shinyapps.io/your-app/", height = "600px")
+```
 
+```{r, fig.cap = "All beach facets included in shiny app"}
+#ASK SDS ABOUT HOW TO INCORPERATE APPS INTO THE BLOG
 ggplot(data = diversityData, aes(x = treatment, y = diversity)) +
   geom_col(aes(fill = treatment)) +
   scale_color_brewer() +
@@ -179,8 +190,8 @@ ggplot(data = diversityData, aes(x = treatment, y = diversity)) +
 
 ```
 # Algae Cover {.tabset .tabset-fade .tabset-pills}
-```{r, fig.cap = "This is also figure caption"}
-#ASK ABOUT THE LITTLE GREY OUTPUTS AT THE TOP AND HOW TO INCLUDE CODE CHUNK
+```{r, fig.cap = "Algae Cover"}
+
 #algae cover vs nutrients
 ggplot(data = beaches, aes(x = po4SedMean, y = algaePercentCover)) +
   geom_point() +
@@ -189,7 +200,7 @@ ggplot(data = beaches, aes(x = po4SedMean, y = algaePercentCover)) +
 
 ```
 # Nutrients Levels {.tabset .tabset-fade .tabset-pills}
-```{r, fig.cap = "This is also figure caption"}
+```{r, fig.cap = "Nutrients Levels Across Beaches"}
 #assemble plots of nutrient data
 library(cowplot)
 
