@@ -235,6 +235,9 @@ write_csv(diversityData, 'diversityData.csv')
 #assemble plots of nutrient data
 library(cowplot)
 
+#make long-form dataframe for faceting
+sedNutrients <- data.frame(allCleanData$)
+
 sedpo4 <- ggplot(data = allCleanData, aes(x = po4SedMean, y = controlDiversity)) +
   geom_point() +
   geom_smooth(method = 'lm')
@@ -243,7 +246,11 @@ sedno2no3 <- ggplot(data = allCleanData, aes(x = no2no3SedMean, y = controlDiver
   geom_point() +
   geom_smooth(method = 'lm')
 
-plot_grid(sedpo4, sedno2no3)
+sednh4 <- ggplot(data = allCleanData, aes(x = nh4SedMean, y = controlDiversity)) +
+  geom_point() +
+  geom_smooth(method = 'lm')
+
+plot_grid(sedpo4, sedno2no3, sednh4)
 
 #open up photo sphere
 library(googleway)
@@ -307,6 +314,8 @@ allCleanData$link <- c("<a href=https://www.google.com/maps/@42.2101224,-8.77574
                 "<a href=https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=42.446949,-8.875339&pitch=0&fov=90>Praia a Lanzada</a>",
                 "<a href=https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=42.5650024,-9.0403023&pitch=0&fov=90>Praia Corrubedo</a>",
                 "<a href=https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=42.83108,-9.105523&pitch=0&fov=90>Praia Carnota</a>")
+
+write_csv(allCleanData, 'beachData.csv')
 
 leaflet(data = allCleanData) %>%
   addTiles() %>%
