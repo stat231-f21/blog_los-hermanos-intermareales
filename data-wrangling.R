@@ -235,22 +235,25 @@ write_csv(diversityData, 'diversityData.csv')
 #assemble plots of nutrient data
 library(cowplot)
 
-#make long-form dataframe for faceting
-sedNutrients <- data.frame(allCleanData$)
-
 sedpo4 <- ggplot(data = allCleanData, aes(x = po4SedMean, y = controlDiversity)) +
   geom_point() +
-  geom_smooth(method = 'lm')
+  geom_smooth(method = 'lm') +
+  ylim(0, 2.5) +
+  labs(x = "Sediment PO4 Density (ug/g)", y = "Shannon Diversity Index")
 
 sedno2no3 <- ggplot(data = allCleanData, aes(x = no2no3SedMean, y = controlDiversity)) +
   geom_point() +
-  geom_smooth(method = 'lm')
+  geom_smooth(method = 'lm') +
+  ylim(0, 2.5) +
+  labs(x = "Sediment NO2NO3 Density (ug/g)", y = "")
 
 sednh4 <- ggplot(data = allCleanData, aes(x = nh4SedMean, y = controlDiversity)) +
   geom_point() +
-  geom_smooth(method = 'lm')
+  geom_smooth(method = 'lm') +
+  ylim(0, 2.5) +
+  labs(x = "Sediment NH4 Density (ug/g)", y = "")
 
-plot_grid(sedpo4, sedno2no3, sednh4)
+plot_grid(sedpo4, sedno2no3, sednh4, labels = "auto", align = "h", ncol = 3)
 
 #open up photo sphere
 library(googleway)
