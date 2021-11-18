@@ -270,9 +270,6 @@ google_map_panorama(coordsVector)
 
 #NMDS
 nmds <- metaMDS(controlSummary[-1], distance = "bray")
-  
-
-plot(nmds)
 
 pointData <- data.frame(nmds$points) %>%
   mutate(site = controlSummary$site)
@@ -302,20 +299,17 @@ ggplot() +
 #interactive map
 library(leaflet)
 
-links <- data.frame(allCleanData$site)
-links$link <- c("https://www.google.com/maps/@42.2101224,-8.7757497,3a,90y,212.53h,86.22t/data=!3m6!1e1!3m4!1sAF1QipO_X8PAILvE-FDBAzc2KzKaZOG-N25_32TkZs4i!2e10!7i7168!8i3584",
-                "https://www.google.com/maps/@42.1271625,-8.8205993,3a,90y,90t/data=!3m6!1e1!3m4!1sAF1QipMupvvJOz4MNY6X9WRT4STP8VIG1FH7XUXhJ17Y!2e10!7i7168!8i3584",
-                "https://www.google.com/maps/@42.1426658,-8.8205185,3a,90y,90t/data=!3m6!1e1!3m4!1sAF1QipNaBDJWR7ubjuFGDyetH3ErY4xvJ5Xez0qI48_w!2e10!7i8192!8i4096",
-                "https://www.google.com/maps/@42.2612482,-8.8521952,3a,90y,90t/data=!3m6!1e1!3m4!1sAF1QipMRuQOcAdWYtiGDfhCe6gCKqv6DNGqnP6cXP-E!2e10!7i10240!8i5120",
-                "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=42.257974,-8.837423&pitch=0&fov=90",
-                "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=42.446949,-8.875339&pitch=0&fov=90",
-                "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=42.5650024,-9.0403023&pitch=0&fov=90",
-                "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=42.83108,-9.105523&pitch=0&fov=90")
-
-allCleanData$link <- links$link
+allCleanData$link <- c("<a href=https://www.google.com/maps/@42.2101224,-8.7757497,3a,90y,212.53h,86.22t/data=!3m6!1e1!3m4!1sAF1QipO_X8PAILvE-FDBAzc2KzKaZOG-N25_32TkZs4i!2e10!7i7168!8i3584>Praia Samil</a>",
+                "<a href=https://www.google.com/maps/@42.1271625,-8.8205993,3a,90y,90t/data=!3m6!1e1!3m4!1sAF1QipMupvvJOz4MNY6X9WRT4STP8VIG1FH7XUXhJ17Y!2e10!7i7168!8i3584>Praia America 1</a>",
+                "<a href=https://www.google.com/maps/@42.1426658,-8.8205185,3a,90y,90t/data=!3m6!1e1!3m4!1sAF1QipNaBDJWR7ubjuFGDyetH3ErY4xvJ5Xez0qI48_w!2e10!7i8192!8i4096>Praia America 2</a>",
+                "<a href=https://www.google.com/maps/@42.2612482,-8.8521952,3a,90y,90t/data=!3m6!1e1!3m4!1sAF1QipMRuQOcAdWYtiGDfhCe6gCKqv6DNGqnP6cXP-E!2e10!7i10240!8i5120>Praia de Barra</a>",
+                "<a href=https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=42.257974,-8.837423&pitch=0&fov=90>Praia de Nerga</a>",
+                "<a href=https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=42.446949,-8.875339&pitch=0&fov=90>Praia a Lanzada</a>",
+                "<a href=https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=42.5650024,-9.0403023&pitch=0&fov=90>Praia Corrubedo</a>",
+                "<a href=https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=42.83108,-9.105523&pitch=0&fov=90>Praia Carnota</a>")
 
 leaflet(data = allCleanData) %>%
   addTiles() %>%
-  addMarkers(popup = )
+  addMarkers(popup = allCleanData$link)
 
 
