@@ -24,8 +24,8 @@ knitr::opts_chunk$set(echo = FALSE,
 
 # Set R environment options
 options(knitr.kable.NA = '')
-beaches <- read_csv("beachData.csv")
-controlSummary<- read.csv("controlSummary.csv")
+beaches <- read_csv("Data/beachData.csv")
+controlSummary<- read.csv("Data/controlSummary.csv")
 controlSummary <- controlSummary%>%
   select(-  X)
 
@@ -44,7 +44,7 @@ controlSummary$site[1] <- "America 1"
 <!-- Add photo -->
 
 ```{r, fig.cap = "Photo was taken just outside of Playa de Soesto"}
-knitr::include_graphics("/Users/carrie/Desktop/Stat 231/blog_los-hermanos-intermareales-main/20201201_132238 copy.jpg")
+knitr::include_graphics("databeachimg.jpg")
 ```
 
 Our blog is intended to inform users about the sediment nutrients, algal cover, fauna diversity, and locations of eight different sites in Galicia, Spain: Playa America, Carnota, Corrubedo, Barra, Nerga, Lanzada, and Samil. Our blog is centered around a shiny app that includes five different visualizations of beach characteristic variance. All of the visualizations have interactive widgets that allow users to compare different sites, treatments, and nutrients levels, as well as allowing users to click on and view the beaches where the data was collected.
@@ -54,7 +54,7 @@ We decided to focus on the individual characteristics of eight different beaches
 The data centered around biodiversity was taken during an experiment that compared biodiversity levels when bait was left in the sand. In the field, researchers collected sediment cores from about knee-deep in the water off the beach. These cores were taken back to the lab, where researchers identified all the species present and logged the number of representatives for each species. These data were used to estimate the density per square meter of each species, and it was used to identify the organism diversity found after three different treatments. The treatments included placing a piece of “bait” (squid) in the sand for 10 and 20 minutes, and after the duration of the treatment a 1m^2 core sample was taken from the sand.
 
 ```{r, fig.cap = "Playa Lanzada"}
-knitr::include_graphics("/Users/carrie/Desktop/Stat 231/blog_los-hermanos-intermareales-main/Screen Shot 2021-11-16 at 12.44.49 PM.png")
+knitr::include_graphics("Screen Shot 2021-11-16 at 12.44.49 PM.png")
 ```
 
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For example, you can include **Bold** and _Italic_ and `Code` text.  For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
@@ -142,22 +142,27 @@ For typesetting equations appropriately, take a look at the *Symbols in math mod
 
 ```
 # Similarity maps {.tabset .tabset-fade .tabset-pills}
-```{r, fig.cap = "Jaccard Similarities Map of Beaches in Galicia", echo = TRUE}
+```{r, fig.cap = "Bray-Curtis Similarities Map of Beaches in Galicia", echo = TRUE}
 
 #FIGURE OUT HOW TO GET AMERICA 1 NAME BACK ON THIS GRAPH
 #TRY TO FIND OUT HOW WE CAN FUGURE OUT WHAT SIMILARITY INDEX IS BEST/USED FOR THE MDS PLOT
-#jaccard similarity index comparison/groupings
-jaccard <- vegdist(controlSummary[-1], method = "jaccard")
+#bray-curtis similarity index comparison/groupings
+bray_dist <- vegdist(controlSummary[-1], method = "bray")
 
 names <- controlSummary[[1]]
-jaccard <- dist_setNames(jaccard, names)
+bray_dist <- dist_setNames(bray_dist, names)
 
 plot(
-  hclust(jaccard),
+  hclust(bray_dist),
   hang = -1,
-  main = "Sites clustered by Jaccard similarity",
-  axes = FALSE, ylab = "", xlab = "")
+  main = "Sites clustered by Bray-Curtis similarity",
+  axes = FALSE, ylab = "", xlab = "",
+  sub = "")
 ```
+
+  The Bray-curtis similarity maps depicts how similar all of the beaches are based on the Bray-curtis similarity index. We use the control data for species density in order. Bray-Curtis similarity gauges the similarity of diversity sample sets and takes the ratio of the two times the intersection over the sum, and the index range is from zero to one.  In other words, if two beaches are exactly the same, the intersection and union of data would be the same so the Bray-Curtis similarity between the two would be equal to 1. Our visualization clusters beaches by 1 - similarity, which is otherwise known as Sorensen Similarity. 
+  Jaccard and Sorensen are based solely on species incidence but bray curtis is calculated using species abundance. Jaccard only focuses on whether species are present are not but Bray Curtis cares about the species abundance. We chose to use Bray Curtis when comparing beaches because we do indeed care about species abundance. 
+
 
 # Fauna Diversity {.tabset .tabset-fade .tabset-pills}
 ```{r, fig.cap = "Average Diversity between Treatments", echo = TRUE}
@@ -180,6 +185,8 @@ The link to the app is included here
 #knitr::include_app("https://your-account.shinyapps.io/your-app/", height = "600px")
 ```
 
+  In the field, researchers collected sediment cores from about knee-deep in the water off beaches in order to gather data to measure fauna diversity. These cores were taken back to the lab, where researchers identified all the species present and logged the number of representatives for each species. These data were used to estimate the density per square meter of each species. Bar chart compares the organism diversity found after three different treatments. The treatments included placing a piece of “bait” (squid) in the sand for 10 and 20 minutes, and after the duration of the treatment a 1m^2 core sample was taken from the sand. We included a widget for the bar graph that allows users to select the site location where each experiment was performed, and this allows users to easily compare the effectiveness of the treatments and the diversity levels from the array of sites. There was no significant pattern found from the results of all the different sites, but interactions between different organisms did affect the results of the treatments. There was no obvious trend across all of the beaches, but at sites, like Barra, where there was less diversity found after the treatment, we considered the idea that the bait could have drawn one or two specific organisms that either scared away or beat out other organisms. And at sites like Lanzada, where there was more diversity found with the ten and twenty minute treatments, we thought that the bait could have drawn a wider variety of species, leading to more diversity.
+
 ```{r, fig.cap = "All beach facets included in shiny app"}
 #ASK SDS ABOUT HOW TO INCORPERATE APPS INTO THE BLOG
 ggplot(data = diversityData, aes(x = treatment, y = diversity)) +
@@ -199,6 +206,9 @@ ggplot(data = beaches, aes(x = po4SedMean, y = algaePercentCover)) +
   ylim(0, 4)
 
 ```
+
+In order to gauge algal cover, algal wracks were measured at six transects along each beach, and they were measured from the high water mark to the base of the dunes at the top of the beach. We used these data to estimate the percent cover of algae on each beach. Here, we visualize the relationship between fauna diversity and algal cover. The interactive portion of this tab allows us to switch between two different measures of diversity, the Shannon Diversity Index, which takes into account the number and abundance of species, and the species richness, which measures only the number of species encountered. Note the positive relationship between diversity and algal cover. Algal wrack provides a food source for many animals on the beach, so a higher cover of algae could allow for greater diversity
+
 # Nutrients Levels {.tabset .tabset-fade .tabset-pills}
 ```{r, fig.cap = "Nutrients Levels Across Beaches"}
 #assemble plots of nutrient data
@@ -214,6 +224,9 @@ sedno2no3 <- ggplot(data = beaches, aes(x = no2no3SedMean, y = controlDiversity)
 
 plot_grid(sedpo4, sedno2no3)
 ```
+
+For each of the eight beaches, six samples of sediment, interstitial water, and surf water were analyzed for nutrient content of PO4, NO2 + NO3, and NH4. The histogram displays the amount of nutrient content (micrograms per gram of sediment/water) for PO4 specifically due to its impact on biodiversity in the area. Notice how the sediment mean is symmetrical, while both water means are right-skewed. This suggests a more normal distribution for PO4 content in sediment (centered at ~1.75 micrograms per gram sed.). Meanwhile, the mode of PO4 content of both water types equalling zero suggests that finding any amount of PO4 is not a guarantee. However, when PO4 is found, the values are significantly higher than that of the sediment. Interestingly, interstitial water has more PO4 on average than surf water, despite low content in the sediment. This could be caused by the nutrients being absorbed by the water (many are ions)
+
 # Sediment Levels {.tabset .tabset-fade .tabset-pills}
 
 
