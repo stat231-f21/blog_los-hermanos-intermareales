@@ -16,6 +16,10 @@ library(kableExtra) # for example code; delete if not needed
 library(vegan)
 library(usedist)
 
+library(shiny)
+library(leaflet)
+library(shinythemes)
+
 # Set code chunk defaults
 knitr::opts_chunk$set(echo = FALSE,
                      message = FALSE,
@@ -43,18 +47,18 @@ controlSummary$site[1] <- "America 1"
 
 <!-- Add photo -->
 
-```{r, fig.cap = "Photo was taken just outside of Playa de Soesto"}
-knitr::include_graphics("databeachimg.jpg")
+```{r, fig.cap = "Playa de Soesto, Galicia, Spain"}
+knitr::include_graphics("Data/beachimg.jpg")
 ```
 
-Our blog is intended to inform users about the sediment nutrients, algal cover, fauna diversity, and locations of eight different sites in Galicia, Spain: Playa America, Carnota, Corrubedo, Barra, Nerga, Lanzada, and Samil. Our blog is centered around a shiny app that includes five different visualizations of beach characteristic variance. All of the visualizations have interactive widgets that allow users to compare different sites, treatments, and nutrients levels, as well as allowing users to click on and view the beaches where the data was collected.
+Our blog is intended to inform users about the sediment nutrients, algal cover, fauna diversity, and locations of eight different sites in Galicia, Spain: Playa America, Carnota, Corrubedo, Barra, Nerga, Lanzada, and Samil. Our blog is centered around a shiny app that includes five different visualizations of beach characteristic variance. All of the visualizations have interactive widgets that allow users to compare different sites, treatments, and nutrient levels, as well as allowing users to click on and view the beaches where the data was collected.
 
 We decided to focus on the individual characteristics of eight different beaches in Spain and how the beaches vary in biodiversity and geography. The data that we wrangled and analysed included species types, nutrients levels, locations, beach pitches, similarity, and experimental biodiversity levels.For each of the eight beaches, six samples of sediment, interstitial water, and surf water were analyzed for nutrient content of PO4, NO2 + NO3, and NH4. We looked at PO4 specifically because of the impact that it has on biodiversity in the area.
 
 The data centered around biodiversity was taken during an experiment that compared biodiversity levels when bait was left in the sand. In the field, researchers collected sediment cores from about knee-deep in the water off the beach. These cores were taken back to the lab, where researchers identified all the species present and logged the number of representatives for each species. These data were used to estimate the density per square meter of each species, and it was used to identify the organism diversity found after three different treatments. The treatments included placing a piece of “bait” (squid) in the sand for 10 and 20 minutes, and after the duration of the treatment a 1m^2 core sample was taken from the sand.
 
 ```{r, fig.cap = "Playa Lanzada"}
-knitr::include_graphics("Screen Shot 2021-11-16 at 12.44.49 PM.png")
+knitr::include_graphics("Data/Screen Shot 2021-11-16 at 12.44.49 PM.png")
 ```
 
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For example, you can include **Bold** and _Italic_ and `Code` text.  For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
@@ -133,20 +137,41 @@ For typesetting equations appropriately, take a look at the *Symbols in math mod
 # Beach Views {.tabset .tabset-fade .tabset-pills}
 
 ```{r, fig.cap = "This is also figure caption", echo = TRUE}
-#interactive map
-#library(leaflet)
+shinyApp(
+  ui <- fluidPage(
 
-#leaflet(data = beaches) %>%
- # addTiles() %>%
- # addMarkers()
+    # Application title
+    titlePanel(
+      h1("Beach Locations",h3("Click on beach markers to view photo-spheres"))
+    ),
+    theme = shinytheme("superhero"),
+    
+    mainPanel(
+      leafletOutput("beachMap")
+    )
+  ),
+  
+  # Define server logic required to draw a histogram
+  server <- function(input, output) {
+  
+      output$beachMap <- renderLeaflet({
+          leaflet(data = beaches) %>%
+              addTiles() %>%
+              addMarkers(popup = beaches$link)
+      })
+  },
+  
+  options = list(height = 600)
+)
 
 ```
-# Similarity maps {.tabset .tabset-fade .tabset-pills}
-```{r, fig.cap = "Bray-Curtis Similarities Map of Beaches in Galicia", echo = TRUE}
 
-#FIGURE OUT HOW TO GET AMERICA 1 NAME BACK ON THIS GRAPH
-#TRY TO FIND OUT HOW WE CAN FUGURE OUT WHAT SIMILARITY INDEX IS BEST/USED FOR THE MDS PLOT
-#bray-curtis similarity index comparison/groupings
+
+# Cluster Analysis {.tabset .tabset-fade .tabset-pills}
+
+```{r, fig.cap = "Hierarchical Clustering of Beaches by Fauna Composition", echo = TRUE}
+
+#bray-curtis dissimilarity index comparison/groupings
 bray_dist <- vegdist(controlSummary[-1], method = "bray")
 
 names <- controlSummary[[1]]
@@ -158,10 +183,29 @@ plot(
   main = "Sites clustered by Bray-Curtis similarity",
   axes = FALSE, ylab = "", xlab = "",
   sub = "")
+
 ```
 
-  The Bray-curtis similarity maps depicts how similar all of the beaches are based on the Bray-curtis similarity index. We use the control data for species density in order. Bray-Curtis similarity gauges the similarity of diversity sample sets and takes the ratio of the two times the intersection over the sum, and the index range is from zero to one.  In other words, if two beaches are exactly the same, the intersection and union of data would be the same so the Bray-Curtis similarity between the two would be equal to 1. Our visualization clusters beaches by 1 - similarity, which is otherwise known as Sorensen Similarity. 
-  Jaccard and Sorensen are based solely on species incidence but bray curtis is calculated using species abundance. Jaccard only focuses on whether species are present are not but Bray Curtis cares about the species abundance. We chose to use Bray Curtis when comparing beaches because we do indeed care about species abundance. 
+```{r, fig.cap = "Non-metric Multidimensional Scaling of Beaches by Fauna Composition (Stress = 0.072)", echo = TRUE, message = FALSE, results = 'hide'}
+#NMDS (also using bray-curtis dissimilarity)
+nmds <- metaMDS(controlSummary[-1], distance = "bray")
+
+pointData <- data.frame(nmds$points) %>%
+  mutate(site = controlSummary$site)
+
+speciesData <- data.frame(nmds$species)
+
+#plot sites
+ggplot() +
+  geom_point(data = pointData, size = 8, alpha = 0.5, aes(x = MDS1, y = MDS2, col = site))
+
+```
+
+  The cluster analysis depicts how similar all of the beaches are based on the Bray-curtis similarity index. We use the control data for species density in order. Bray-Curtis similarity gauges the similarity of diversity sample sets and takes the ratio of the two times the intersection over the sum, with an index range from zero to one.  In other words, if two beaches are exactly the same, the intersection and union of data would be the same so the Bray-Curtis similarity between the two would be equal to 1.
+  
+  There are several commonly-used similarity indeces, including Jaccard, Sorensen, and Bray-Curtis. Jaccard and Sorensen are based solely on species incidence but Bray-Curtis is calculated using species abundance. Jaccard only focuses on whether species are present are not but Bray-Curtis accounts for the species abundance. We chose to use Bray-Curtis when comparing beaches since we have data on species abundance, and since species abundance is ecologically relevant.
+  
+  The first visualization depicts a hierarchical clustering of similarity. Here, more similar sites are grouped more closely together. This model was constructed from a dissimilarity matrix containing comparisons of all the sites. The second visualization is a non-metric multidimensional scaling plot constructed from the same data. In this plot, the distance between points is their dissimilarity. Points that are close together are more likely to be similar than points ordinated far apart from each other.
 
 
 # Fauna Diversity {.tabset .tabset-fade .tabset-pills}
@@ -209,23 +253,35 @@ ggplot(data = beaches, aes(x = po4SedMean, y = algaePercentCover)) +
 
 In order to gauge algal cover, algal wracks were measured at six transects along each beach, and they were measured from the high water mark to the base of the dunes at the top of the beach. We used these data to estimate the percent cover of algae on each beach. Here, we visualize the relationship between fauna diversity and algal cover. The interactive portion of this tab allows us to switch between two different measures of diversity, the Shannon Diversity Index, which takes into account the number and abundance of species, and the species richness, which measures only the number of species encountered. Note the positive relationship between diversity and algal cover. Algal wrack provides a food source for many animals on the beach, so a higher cover of algae could allow for greater diversity
 
-# Nutrients Levels {.tabset .tabset-fade .tabset-pills}
-```{r, fig.cap = "Nutrients Levels Across Beaches"}
+# Nutrient Levels {.tabset .tabset-fade .tabset-pills}
+```{r, fig.cap = "Nutrient Levels Across Beaches"}
 #assemble plots of nutrient data
 library(cowplot)
 
 sedpo4 <- ggplot(data = beaches, aes(x = po4SedMean, y = controlDiversity)) +
   geom_point() +
-  geom_smooth(method = 'lm')
+  geom_smooth(method = 'lm') +
+  ylim(0, 2.5) +
+  labs(x = "PO4 Density (ug/g)", y = "Shannon Diversity Index")
 
 sedno2no3 <- ggplot(data = beaches, aes(x = no2no3SedMean, y = controlDiversity)) +
   geom_point() +
-  geom_smooth(method = 'lm')
+  geom_smooth(method = 'lm') +
+  ylim(0, 2.5) +
+  labs(x = "NO2NO3 Density (ug/g)", y = "")
 
-plot_grid(sedpo4, sedno2no3)
+sednh4 <- ggplot(data = beaches, aes(x = nh4SedMean, y = controlDiversity)) +
+  geom_point() +
+  geom_smooth(method = 'lm') +
+  ylim(0, 2.5) +
+  labs(x = "NH4 Density (ug/g)", y = "")
+
+plot_grid(sedpo4, sedno2no3, sednh4, labels = "auto", align = "h", ncol = 3)
 ```
 
-For each of the eight beaches, six samples of sediment, interstitial water, and surf water were analyzed for nutrient content of PO4, NO2 + NO3, and NH4. The histogram displays the amount of nutrient content (micrograms per gram of sediment/water) for PO4 specifically due to its impact on biodiversity in the area. Notice how the sediment mean is symmetrical, while both water means are right-skewed. This suggests a more normal distribution for PO4 content in sediment (centered at ~1.75 micrograms per gram sed.). Meanwhile, the mode of PO4 content of both water types equalling zero suggests that finding any amount of PO4 is not a guarantee. However, when PO4 is found, the values are significantly higher than that of the sediment. Interestingly, interstitial water has more PO4 on average than surf water, despite low content in the sediment. This could be caused by the nutrients being absorbed by the water (many are ions)
+For each of the eight beaches, six samples of sediment, interstitial water, and surf water were analyzed for the nutrient content of PO4, NO2 + NO3, and NH4.  Above are two lines of best fit for the biodiversity of the beaches versus the PO4 and NO2 + NO3 content in the sediment, in micrograms nutrient per gram sediment.  While there tends to be a lot more PO4 in the sediment than NO2 + NO3, since the line of best fit’s slope is closer to zero, biodiversity is more impacted by NO2 + NO3 content than it is by PO4 content.  Another key difference between the two is that as PO4 content increases, biodiversity tends to slightly decline (<0.1 points less per microgram nutrient added), while as NO2 + NO3 content increases, biodiversity also tends to increase (~10 points more per microgram nutrient added).
+
+Also, as you can see by the size of the shaded region of uncertainty, the variation between data points on the graph for PO4 is much larger than that of NO2 + NO3.  This means that biodiversity has a stronger linear correlation with NO2 + NO3 content than it does with PO4 content.  While it is impossible to tell by these data whether these nutrients cause differences in biodiversity, it is important to acknowledge their relationships of varying significance are certainly present.
 
 # Sediment Levels {.tabset .tabset-fade .tabset-pills}
 
