@@ -268,7 +268,7 @@ sedno2no3 <- ggplot(data = beaches, aes(x = no2no3SedMean, y = controlDiversity)
   geom_point() +
   geom_smooth(method = 'lm') +
   ylim(0, 2.5) +
-  labs(x = "NO2NO3 Density (ug/g)", y = "")
+  labs(x = "NO2 + NO3 Density (ug/g)", y = "")
 
 sednh4 <- ggplot(data = beaches, aes(x = nh4SedMean, y = controlDiversity)) +
   geom_point() +
