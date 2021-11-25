@@ -178,7 +178,7 @@ names <- controlSummary[[1]]
 bray_dist <- dist_setNames(bray_dist, names)
 
 plot(
-  hclust(bray_dist),
+  hclust(1-bray_dist),
   hang = -1,
   main = "Sites clustered by Bray-Curtis similarity",
   axes = FALSE, ylab = "", xlab = "",
