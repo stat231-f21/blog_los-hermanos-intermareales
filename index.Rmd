@@ -247,11 +247,12 @@ ggplot(data = diversityData, aes(x = treatment, y = diversity)) +
 ggplot(data = beaches, aes(x = po4SedMean, y = algaePercentCover)) +
   geom_point() +
   geom_smooth(method = 'lm') +
-  ylim(0, 4)
+  ylim(0, 4) +
+  labs(x = "Mean PO4 Content in Sediment", y = "Algae Cover (%)")
 
 ```
 
-In order to gauge algal cover, algal wracks were measured at six transects along each beach, and they were measured from the high water mark to the base of the dunes at the top of the beach. We used these data to estimate the percent cover of algae on each beach. Here, we visualize the relationship between fauna diversity and algal cover. The interactive portion of this tab allows us to switch between two different measures of diversity, the Shannon Diversity Index, which takes into account the number and abundance of species, and the species richness, which measures only the number of species encountered. Note the positive relationship between diversity and algal cover. Algal wrack provides a food source for many animals on the beach, so a higher cover of algae could allow for greater diversity
+In order to gauge algal cover, algal wracks were measured at six transects along each beach, and they were measured from the high water mark to the base of the dunes at the top of the beach. We used these data to estimate the percent cover of algae on each beach. Here, we visualize the relationship between PO4 content in sediment and algal cover. Note the positive relationship between PO4 content and algal cover, suggesting that algal cover generally increases with an increased concentration of PO4.  This would make sense, as higher PO4 content is generally associated with higher biodiversity and so is algal wrack.
 
 # Nutrient Levels {.tabset .tabset-fade .tabset-pills}
 ```{r, fig.cap = "Nutrient Levels Across Beaches", width = 1000}
