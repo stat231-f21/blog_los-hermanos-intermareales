@@ -200,7 +200,7 @@ names <- controlSummary[[1]]
 bray <- dist_setNames(bray, names)
 
 plot(
-  hclust(1-bray),
+  hclust(bray),
   hang = -1,
   main = "Sites clustered by Bray-Curtis similarity",
   axes = FALSE, ylab = "", xlab = "")
@@ -279,7 +279,8 @@ coordsVector <- c(allCleanData$lat[8], allCleanData$long[8])
 google_map_panorama(coordsVector)
 
 #NMDS
-nmds <- metaMDS(controlSummary[-1], distance = "bray")
+set.seed(300)
+nmds <- metaMDS(controlSummary[-1], autotransform = FALSE)
 
 pointData <- data.frame(nmds$points) %>%
   mutate(site = controlSummary$site)

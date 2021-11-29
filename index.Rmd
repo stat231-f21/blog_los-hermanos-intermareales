@@ -105,7 +105,7 @@ names <- controlSummary[[1]]
 bray_dist <- dist_setNames(bray_dist, names)
 
 plot(
-  hclust(1-bray_dist),
+  hclust(bray_dist),
   hang = -1,
   main = "Sites clustered by Bray-Curtis similarity",
   axes = FALSE, ylab = "", xlab = "",
@@ -113,9 +113,9 @@ plot(
 
 ```
 
-```{r, fig.cap = "Non-metric Multidimensional Scaling of Beaches by Fauna Composition (Stress = 0.072)", echo = TRUE, message = FALSE, results = 'hide', fig.height = 4}
+```{r, fig.cap = "Non-metric Multidimensional Scaling of Beaches by Fauna Composition (Stress = 0.046)", echo = TRUE, message = FALSE, results = 'hide', fig.height = 4}
 #NMDS (also using bray-curtis dissimilarity)
-nmds <- metaMDS(controlSummary[-1], distance = "bray")
+nmds <- metaMDS(controlSummary[-1], distance = "bray", autotransform = FALSE)
 
 pointData <- data.frame(nmds$points) %>%
   mutate(site = controlSummary$site)
@@ -124,7 +124,7 @@ speciesData <- data.frame(nmds$species)
 
 #plot sites
 ggplot() +
-  geom_point(data = pointData, size = 8, alpha = 0.5, aes(x = MDS1, y = MDS2, col = site))
+  geom_point(data = pointData, size = 5, alpha = 0.5, aes(x = MDS1, y = MDS2, col = site))
 
 ```
 
