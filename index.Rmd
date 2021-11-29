@@ -20,6 +20,8 @@ library(shiny)
 library(leaflet)
 library(shinythemes)
 
+library(cowplot)
+
 # Set code chunk defaults
 knitr::opts_chunk$set(echo = FALSE,
                      message = FALSE,
@@ -61,7 +63,7 @@ The data centered around biodiversity was taken during an experiment that compar
 <!-- add new tabs -->
 # Beach Views {.tabset .tabset-fade .tabset-pills}
 
-```{r, "Interactive map", echo = TRUE}
+```{r, "Interactive map", echo = FALSE}
 shinyApp(
   ui <- fluidPage(
 
@@ -94,7 +96,7 @@ shinyApp(
 
 # Cluster Analysis {.tabset .tabset-fade .tabset-pills}
 
-```{r, fig.cap = "Hierarchical Clustering of Beaches by Fauna Composition", echo = TRUE}
+```{r, fig.cap = "Hierarchical Clustering of Beaches by Fauna Composition", echo = TRUE, fig.height = 4}
 
 #bray-curtis dissimilarity index comparison/groupings
 bray_dist <- vegdist(controlSummary[-1], method = "bray")
@@ -167,14 +169,28 @@ ggplot(data = diversityData, aes(x = treatment, y = diversity)) +
 
 ```
 # Algae Cover {.tabset .tabset-fade .tabset-pills}
-```{r, fig.cap = "Algae Cover"}
+```{r, fig.cap = "Algae Cover", fig.height = 3}
 
-#algae cover vs nutrients
-ggplot(data = beaches, aes(x = po4SedMean, y = algaePercentCover)) +
+#generate graphs of algae cover vs nutrinet concentration
+algpo4 <- ggplot(data = beaches, aes(x = po4SedMean, y = algaePercentCover)) +
   geom_point() +
   geom_smooth(method = 'lm') +
-  ylim(0, 4) +
-  labs(x = "Mean PO4 Content in Sediment", y = "Algae Cover (%)")
+  ylim(0, 2.5) +
+  labs(x = "PO4 Density (ug/g)", y = "Algae Cover (%)")
+
+algno2no3 <- ggplot(data = beaches, aes(x = no2no3SedMean, y = algaePercentCover)) +
+  geom_point() +
+  geom_smooth(method = 'lm') +
+  ylim(0, 2.5) +
+  labs(x = "NO2 + NO3 Density", y = "")
+
+algnh4 <- ggplot(data = beaches, aes(x = nh4SedMean, y = algaePercentCover)) +
+  geom_point() +
+  geom_smooth(method = 'lm') +
+  ylim(0, 2.5) +
+  labs(x = "NH4 Density", y = "")
+
+plot_grid(algpo4, algno2no3, algnh4, labels = "auto", align = "h", ncol = 3)
 
 ```
 
@@ -183,7 +199,6 @@ In order to gauge algal cover, algal wracks were measured at six transects along
 # Nutrient Levels {.tabset .tabset-fade .tabset-pills}
 ```{r, fig.cap = "Nutrient Levels Across Beaches", fig.height = 3}
 #assemble plots of nutrient data
-library(cowplot)
 
 sedpo4 <- ggplot(data = beaches, aes(x = po4SedMean, y = controlDiversity)) +
   geom_point() +
@@ -210,4 +225,10 @@ For each of the eight beaches, six samples of sediment, interstitial water, and 
 
 Also, as you can see by the size of the shaded region of uncertainty, the variation between data points on the graph for PO4 and NH4 is much larger than that of NO2 + NO3.  This means that biodiversity has a stronger linear correlation with NO2 + NO3 content than it does with PO4 content or NH4 content.  While it is impossible to tell by these data whether these nutrients cause differences in biodiversity, it is important to acknowledge their relationships of varying significance are certainly present.
 
+```{r, fig.cap = "Relationship between fauna diversity and algal cover"}
+ggplot(data = beaches, aes(x = algaePercentCover, y = controlDiversity)) +
+  geom_point() +
+  geom_smooth(method = 'lm') +
+  labs(x = "Algae Cover (%)", y = "Shannon Diversity Index")
+```
 
