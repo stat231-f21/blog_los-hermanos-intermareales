@@ -12,7 +12,7 @@ library(leaflet)
 library(tidyverse)
 library(shinythemes)
 
-beaches <- read_csv("../Data/beachData.csv")
+beaches <- read_csv("beachData.csv")
 
 
 # Define UI for application that draws a histogram
