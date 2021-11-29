@@ -230,5 +230,8 @@ ggplot(data = beaches, aes(x = algaePercentCover, y = controlDiversity)) +
   geom_point() +
   geom_smooth(method = 'lm') +
   labs(x = "Algae Cover (%)", y = "Shannon Diversity Index")
+
+model <- lm(formula = controlDiversity ~ algaePercentCover, data = beaches)
+summary(model)
 ```
 
