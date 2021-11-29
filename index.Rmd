@@ -57,15 +57,11 @@ We decided to focus on the individual characteristics of eight different beaches
 
 The data centered around biodiversity was taken during an experiment that compared biodiversity levels when bait was left in the sand. In the field, researchers collected sediment cores from about knee-deep in the water off the beach. These cores were taken back to the lab, where researchers identified all the species present and logged the number of representatives for each species. These data were used to estimate the density per square meter of each species, and it was used to identify the organism diversity found after three different treatments. The treatments included placing a piece of “bait” (squid) in the sand for 10 and 20 minutes, and after the duration of the treatment a 1m^2 core sample was taken from the sand.
 
-```{r, fig.cap = "Playa Lanzada"}
-knitr::include_graphics("Data/Screen Shot 2021-11-16 at 12.44.49 PM.png")
-```
-
 
 <!-- add new tabs -->
 # Beach Views {.tabset .tabset-fade .tabset-pills}
 
-```{r, fig.cap = "This is also figure caption", echo = TRUE}
+```{r, "Interactive map", echo = TRUE}
 shinyApp(
   ui <- fluidPage(
 
@@ -115,7 +111,7 @@ plot(
 
 ```
 
-```{r, fig.cap = "Non-metric Multidimensional Scaling of Beaches by Fauna Composition (Stress = 0.072)", echo = TRUE, message = FALSE, results = 'hide'}
+```{r, fig.cap = "Non-metric Multidimensional Scaling of Beaches by Fauna Composition (Stress = 0.072)", echo = TRUE, message = FALSE, results = 'hide', fig.height = 4}
 #NMDS (also using bray-curtis dissimilarity)
 nmds <- metaMDS(controlSummary[-1], distance = "bray")
 
@@ -153,8 +149,7 @@ ggplot(data = diversityData, aes(x = treatment, y = diversity)) +
   geom_boxplot() +
   labs(x = "Type of Treatment", y = "Diversity")
 ```
-We can add text here to describe the plots of diversity based on treatment
-The link to the app is included here
+
 ```{r, fig.cap = "Shiny App for Interactive facets of Diversity between Treatments"}
 #knitr::include_app("https://your-account.shinyapps.io/your-app/", height = "600px")
 ```
@@ -186,7 +181,7 @@ ggplot(data = beaches, aes(x = po4SedMean, y = algaePercentCover)) +
 In order to gauge algal cover, algal wracks were measured at six transects along each beach, and they were measured from the high water mark to the base of the dunes at the top of the beach. We used these data to estimate the percent cover of algae on each beach. Here, we visualize the relationship between PO4 content in sediment and algal cover. Note the positive relationship between PO4 content and algal cover, suggesting that algal cover generally increases with an increased concentration of PO4.  This would make sense, as higher PO4 content is generally associated with higher biodiversity and so is algal wrack.
 
 # Nutrient Levels {.tabset .tabset-fade .tabset-pills}
-```{r, fig.cap = "Nutrient Levels Across Beaches", width = 1000}
+```{r, fig.cap = "Nutrient Levels Across Beaches", fig.height = 3}
 #assemble plots of nutrient data
 library(cowplot)
 
