@@ -6,7 +6,7 @@ library(usedist)
 #set working directory -- change path variable to data folder filepath
 pathLuis <- "C:/Users/Luis/Desktop/Work/stat231/blog_los-hermanos-intermareales/Data/"
 pathDavid <- "C:/Users/dmeta/OneDrive/Desktop/STAT231/blog_los-hermanos-intermareales/Data/"
-setwd(pathLuis)
+setwd(pathDavid)
 
 #read in dataframes
 #fauna2020 <- readxl::read_xlsx("Fauna_Bait_Experiment_2020_LUIS_Ind_m2.xlsx")
@@ -171,6 +171,34 @@ allCleanData$totalSedMean <- nutrientsSedAverages$n_total_mean
 allCleanData$totalWaterIntMean <- nutrientsWaterAverages$int_total_mean
 allCleanData$totalWaterSurfMean <- nutrientsWaterAverages$surf_total_mean
 
+# rea in coordinates csv
+coords <- read.csv('siteCoords.csv')
+
+#cleaning up coords, preparing for left join
+coords <- coords %>%
+  janitor::clean_names() %>%
+  mutate(site = case_when(
+    i_site == "America" ~ "America_1",
+    i_site == "America 2" ~ "America_2",
+    i_site == "de Nerga" ~ "Nerga",
+    i_site == "A Lanzada" ~ "Lanzada",
+    TRUE ~ i_site
+  ))
+
+# left join with allCleanData
+allCleanData <- allCleanData %>%
+  left_join(coords, by = c("site" = "site")) %>%
+  select(-i_site)
+
+allCleanData$link <- c("<a href=https://www.google.com/maps/@42.2101224,-8.7757497,3a,90y,212.53h,86.22t/data=!3m6!1e1!3m4!1sAF1QipO_X8PAILvE-FDBAzc2KzKaZOG-N25_32TkZs4i!2e10!7i7168!8i3584>Praia Samil</a>",
+                       "<a href=https://www.google.com/maps/@42.1271625,-8.8205993,3a,90y,90t/data=!3m6!1e1!3m4!1sAF1QipMupvvJOz4MNY6X9WRT4STP8VIG1FH7XUXhJ17Y!2e10!7i7168!8i3584>Praia America 1</a>",
+                       "<a href=https://www.google.com/maps/@42.1426658,-8.8205185,3a,90y,90t/data=!3m6!1e1!3m4!1sAF1QipNaBDJWR7ubjuFGDyetH3ErY4xvJ5Xez0qI48_w!2e10!7i8192!8i4096>Praia America 2</a>",
+                       "<a href=https://www.google.com/maps/@42.2612482,-8.8521952,3a,90y,90t/data=!3m6!1e1!3m4!1sAF1QipMRuQOcAdWYtiGDfhCe6gCKqv6DNGqnP6cXP-E!2e10!7i10240!8i5120>Praia de Barra</a>",
+                       "<a href=https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=42.257974,-8.837423&pitch=0&fov=90>Praia de Nerga</a>",
+                       "<a href=https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=42.446949,-8.875339&pitch=0&fov=90>Praia a Lanzada</a>",
+                       "<a href=https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=42.5650024,-9.0403023&pitch=0&fov=90>Praia Corrubedo</a>",
+                       "<a href=https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=42.83108,-9.105523&pitch=0&fov=90>Praia Carnota</a>")
+
 #write
 write_csv(allCleanData, 'beachData.csv')
 
@@ -230,6 +258,7 @@ ggplot(data = allCleanData, aes(x = po4SedMean, y = algaePercentCover)) +
   geom_smooth(method = 'lm') +
   ylim(0, 4)
 
+#write
 write_csv(diversityData, 'diversityData.csv')
 
 #assemble plots of nutrient data
@@ -257,23 +286,7 @@ plot_grid(sedpo4, sedno2no3, sednh4, labels = "auto", align = "h", ncol = 3)
 
 #open up photo sphere
 library(googleway)
-coords <- read.csv('siteCoords.csv')
 
-#cleaning up coords, preparing for left join
-coords <- coords %>%
-  janitor::clean_names() %>%
-  mutate(site = case_when(
-    i_site == "America" ~ "America_1",
-    i_site == "America 2" ~ "America_2",
-    i_site == "de Nerga" ~ "Nerga",
-    i_site == "A Lanzada" ~ "Lanzada",
-    TRUE ~ i_site
-  ))
-
-# left join with allCleanData
-allCleanData <- allCleanData %>%
-  left_join(coords, by = c("site" = "site")) %>%
-  select(-i_site)
 
 coordsVector <- c(allCleanData$lat[8], allCleanData$long[8])
 google_map_panorama(coordsVector)
@@ -309,17 +322,6 @@ ggplot() +
 
 #interactive map
 library(leaflet)
-
-allCleanData$link <- c("<a href=https://www.google.com/maps/@42.2101224,-8.7757497,3a,90y,212.53h,86.22t/data=!3m6!1e1!3m4!1sAF1QipO_X8PAILvE-FDBAzc2KzKaZOG-N25_32TkZs4i!2e10!7i7168!8i3584>Praia Samil</a>",
-                "<a href=https://www.google.com/maps/@42.1271625,-8.8205993,3a,90y,90t/data=!3m6!1e1!3m4!1sAF1QipMupvvJOz4MNY6X9WRT4STP8VIG1FH7XUXhJ17Y!2e10!7i7168!8i3584>Praia America 1</a>",
-                "<a href=https://www.google.com/maps/@42.1426658,-8.8205185,3a,90y,90t/data=!3m6!1e1!3m4!1sAF1QipNaBDJWR7ubjuFGDyetH3ErY4xvJ5Xez0qI48_w!2e10!7i8192!8i4096>Praia America 2</a>",
-                "<a href=https://www.google.com/maps/@42.2612482,-8.8521952,3a,90y,90t/data=!3m6!1e1!3m4!1sAF1QipMRuQOcAdWYtiGDfhCe6gCKqv6DNGqnP6cXP-E!2e10!7i10240!8i5120>Praia de Barra</a>",
-                "<a href=https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=42.257974,-8.837423&pitch=0&fov=90>Praia de Nerga</a>",
-                "<a href=https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=42.446949,-8.875339&pitch=0&fov=90>Praia a Lanzada</a>",
-                "<a href=https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=42.5650024,-9.0403023&pitch=0&fov=90>Praia Corrubedo</a>",
-                "<a href=https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=42.83108,-9.105523&pitch=0&fov=90>Praia Carnota</a>")
-
-write_csv(allCleanData, 'beachData.csv')
 
 leaflet(data = allCleanData) %>%
   addTiles() %>%
